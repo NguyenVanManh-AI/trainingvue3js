@@ -1,13 +1,12 @@
 <template>
-    <div id="comp-a">
-      <p style="font-size: 30px;">Component A </p>
-
+    <div id="comp-c">
+      <p style="font-size: 30px;">Component C</p>
     </div>
   </template>
   
   <script>
   export default {
-    // name: 'ComponentA',
+    name: 'ComponentC',
     data() {
       return {
 

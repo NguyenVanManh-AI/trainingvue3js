@@ -1,33 +1,56 @@
 <template>
-  <div class="hello">
-    <CompA99999 :numberChild="number" :arrChild="arr" :personChild="person" :printNameChild="printName"></CompA99999>
+  <div class="hello" style="display: flex;">
+    <div style="height: 100vh; width: 50%;border: 10px solid red;">
+      Left bar
+
+      <!-- C2 -->
+      <li><router-link :to="{ name: 'ComponentALink' }">Content A</router-link></li>
+      <li><router-link :to="{ name: 'ComponentB' }">Content B</router-link></li>
+      <li><router-link :to="{ name: 'ComponentC' }">Content C</router-link></li>
+
+      <!-- C1 -->
+      <!-- <li><router-link to="/content/content-a">Content A</router-link></li> -->
+      <!-- <li><router-link to="/content/content-b">Content B</router-link></li> -->
+      <!-- <li><router-link to="/content/content-c">Content C</router-link></li> -->
+
+      <!-- C3 -->
+      <li><a @click="gotopage('a')">Content A</a></li> 
+      <li><a @click="gotopage('b')">Content B</a> </li>
+      <li><a @click="gotopage('c')">Content C</a> </li>
+    </div>
+    <div style="height: 100vh; width: 50%;border: 10px solid green;">
+      Load content 
+      <router-view></router-view>
+    </div>
 </div>
 </template>
 
 <script>
-import CompA from '@/components/ComponentA' 
-// import CompA from './ComponentA'
 
 export default {
   name: 'HelloWorld',
   components : {
-    CompA99999:CompA,
+
   },
   data() {
     return {
-      number : 9,
-      arr: [1,2,3, 'string', {age:19, name:'nvm'}],
-      person : {
-        weight:59,
-        height: 179,
-        age:19, 
-        name:'nvm'
-      }
+
     }
   },
   methods: {
-    printName: function() {
-      console.log("Nguyen Van Manh");
+    gotopage: function(name) {
+      switch(name) {
+        case 'a':
+          this.$router.push({ name: 'ComponentALink' }); 
+          break;
+        case 'b':
+          this.$router.push({ name: 'ComponentB' }); 
+          break;
+        case 'c':
+          this.$router.push({ name: 'ComponentC' }); 
+          break;
+      }
+          
     }
   },
   setup() {
