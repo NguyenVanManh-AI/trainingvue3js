@@ -17,6 +17,7 @@ const routes = [
             { path: 'content-c', name: 'ComponentC', component: ComponentC },
         ]
     },
+    { path: '/:CommonNotFound(.*)*', component: CommonNotFound, name: 'CommonNotFound' }
 ];
 
 const router = createRouter({
