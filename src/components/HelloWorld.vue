@@ -68,15 +68,17 @@ export default {
   mounted() {
 
 
-    // console.log('mounted');
-    // var arr = ['tag1', 'tag2', 'tag3', 999]; // ["tag1","tag2","tag3",999]
-    // console.log(JSON.stringify(arr));
-    // var obj = {
-    //   age: 29,
-    //   name: 'Nguyễn Văn Mạnh'
-    // };
-    // arr = ['tag1', 'tag2', 'tag3', 999, obj]; // ["tag1","tag2","tag3",999]
-    // console.log(JSON.stringify(arr)); // ["tag1","tag2","tag3",999,{"age":29,"name":"Nguyễn Văn Mạnh"}]
+    console.log('mounted');
+    var arr = ['tag1', 'tag2', 'tag3', 999]; // ["tag1","tag2","tag3",999]
+    console.log(arr);
+    console.log(JSON.stringify(arr));
+    var obj = {
+      age: 29,
+      name: 'Nguyễn Văn Mạnh'
+    };
+    arr = ['tag1', 'tag2', 'tag3', 999, obj]; // ["tag1","tag2","tag3",999]
+    console.log(arr); // ["tag1","tag2","tag3",999,{"age":29,"name":"Nguyễn Văn Mạnh"}]
+    console.log(JSON.stringify(arr)); // ["tag1","tag2","tag3",999,{"age":29,"name":"Nguyễn Văn Mạnh"}]
   },
   beforeUpdate() {
 

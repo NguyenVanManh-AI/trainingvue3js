@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld';
 import ComponentAImport from '@/components/ComponentA';
 import ComponentB from '@/components/ComponentB';
 import ComponentC from '@/components/ComponentC';
+import ManageCategory from '@/components/category/ManageCategory';
 import CommonNotFound from '@/components/common/CommonNotFound'
 
 const routes = [
@@ -17,6 +18,7 @@ const routes = [
             { path: 'content-c', name: 'ComponentC', component: ComponentC },
         ]
     },
+    { path: '/category', component: ManageCategory, name: 'ManageCategory'},
     { path: '/:CommonNotFound(.*)*', component: CommonNotFound, name: 'CommonNotFound' }
 ];
 
