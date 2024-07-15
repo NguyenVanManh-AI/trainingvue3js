@@ -90,7 +90,7 @@ export default {
                 this.resetData();
                 emitEvent('eventSuccess', messages[0]);
 
-                emitEvent('evenUpdateCategorySuccess', '');
+                emitEvent('eventRegetCategories', '');
             }
             catch (error) {
                 if (error.data) emitEvent('eventError', error.data[0]);

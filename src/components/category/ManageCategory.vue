@@ -168,10 +168,8 @@ export default {
       sortlatest: searchParams.get('sortlatest') || 'true',
     }
     this.getCategories();
-    onEvent('evenAddCategorySuccess', () => {
-      this.getCategories();
-    });
-    onEvent('evenUpdateCategorySuccess', () => {
+
+    onEvent('eventRegetCategories', () => {
       this.getCategories();
     });
   },

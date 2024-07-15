@@ -66,7 +66,7 @@ export default {
                 // var closePW = window.document.getElementById('updateCategory');
                 // closePW.click();
                 emitEvent('eventSuccess', messages[0]);
-                emitEvent('evenUpdateCategorySuccess', '');
+                emitEvent('eventRegetCategories', '');
             }
             catch (error) {
                 if (error.data) emitEvent('eventError', error.data[0]);

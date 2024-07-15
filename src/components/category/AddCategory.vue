@@ -79,7 +79,7 @@ export default {
                 // closePW.click();
                 this.resetData();
 
-                emitEvent('evenAddCategorySuccess', '');
+                emitEvent('eventRegetCategories', '');
             }
             catch (error) {
                 if (error.data) emitEvent('eventError', error.data[0]);

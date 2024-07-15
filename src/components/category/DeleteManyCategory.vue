@@ -64,7 +64,7 @@ export default {
             try {
                 const { messages } = await UserRequest.post('category/deletes', data, true);
                 emitEvent('eventSuccess', messages[0]);
-                emitEvent('evenUpdateCategorySuccess', '');
+                emitEvent('eventRegetCategories', '');
                 this.$refs.deleteManyCategoryRef.click();
             }
             catch (error) {
