@@ -2,9 +2,17 @@
   <div id="manage-category" class="p-6">
     Manage Category
     <div style="display: flex;justify-content: end;" class="mb-2">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategory">
-        <i class="fa-solid fa-plus"></i> Add Category
+      <button content="Add Category" v-tippy type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategory">
+        <i class="fa-solid fa-plus"></i>
       </button>
+
+      <div class="pr-0 mr-3 ml-3" v-if="selectedCategorys.length > 0">
+        <div class="input-group">
+          <button @click="deleteManyCategory()" content="Delete Many Content" v-tippy data-toggle="modal"
+            data-target="#deleteManyCategory" type="button" class="btn btn-outline-danger mr-1 form-control"><i
+              class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>
     </div>
     <div v-if="isLoading">
       <TableLoading :cols="6" :rows="9"></TableLoading>
@@ -13,6 +21,7 @@
       <table class="table table-striped">
         <thead>
           <tr>
+            <th scope="col"><input ref="selectAllCheckbox" @change="selectAll()" type="checkbox" class=""></th>
             <th scope="col">#</th>
             <th scope="col">Title</th>
             <th scope="col">Description</th>
@@ -26,7 +35,9 @@
         </thead>
         <tbody>
           <tr v-for="(category, index) in categories" :key="index">
-            <th scope="row">{{ index }}</th>
+            <th class="table-cell" scope="row"><input :checked="isSelected(category.id)" type="checkbox" class=""
+                @change="handleSelect(category.id)"></th>
+            <th scope="row">{{ category.id }}</th>
             <td>{{ category.title }}</td>
             <td>{{ category.description }}</td>
             <td>{{ category.search_number }}</td>
@@ -35,8 +46,10 @@
             <td>{{ helper.formatDate(category.created_at) }}</td>
             <td>{{ helper.formatDate(category.updated_at) }}</td>
             <td style="display: flex;">
-              <button @click="selectCategory(category)" data-toggle="modal" data-target="#updateCategory" type="button" class="btn btn-outline-primary mr-2"><i class="fa-solid fa-pen-nib"></i></button>
-              <button @click="selectCategory(category)" data-toggle="modal" data-target="#deleteCategory" type="button" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+              <button content="Update Category" v-tippy @click="selectCategory(category)" data-toggle="modal" data-target="#updateCategory" type="button"
+                class="btn btn-outline-primary mr-2"><i class="fa-solid fa-pen-nib"></i></button>
+              <button content="Delete Category" v-tippy @click="selectCategory(category)" data-toggle="modal" data-target="#deleteCategory" type="button"
+                class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
             </td>
           </tr>
         </tbody>
@@ -45,7 +58,7 @@
     <AddCategory></AddCategory>
     <UpdateCategory :config="config"></UpdateCategory>
     <DeleteCategory :config="config"></DeleteCategory>
-
+    <DeleteManyCategory :selectedCategorys="selectedCategorys"></DeleteManyCategory> 
   </div>
 </template>
 
@@ -62,6 +75,7 @@ import helper from '@/helper'
 import AddCategory from '@/components/category/AddCategory'
 import UpdateCategory from '@/components/category/UpdateCategory'
 import DeleteCategory from '@/components/category/DeleteCategory'
+import DeleteManyCategory from '@/components/category/DeleteManyCategory'
 
 export default {
   name: 'ManageCategory',
@@ -74,6 +88,7 @@ export default {
       last_page: 1,
       isLoading: false,
       selectedCategory: null,
+      selectedCategorys: [],
     }
   },
   components: {
@@ -81,7 +96,8 @@ export default {
     TableLoading,
     AddCategory,
     UpdateCategory,
-    DeleteCategory
+    DeleteCategory,
+    DeleteManyCategory,
     // DeleteContent,
     // DeleteManyContent,
     // DetailContent,
@@ -102,6 +118,23 @@ export default {
   },
 
   methods: {
+    isSelected(categoryId) {
+      return this.selectedCategorys.includes(categoryId);
+    },
+    handleSelect: function (categoryId) {
+      const index = this.selectedCategorys.indexOf(categoryId);
+      if (index === -1) this.selectedCategorys.push(categoryId);
+      else this.selectedCategorys.splice(index, 1);
+    },
+    selectAll: function () {
+      const checkbox = this.$refs.selectAllCheckbox;
+      if (checkbox.checked) this.selectedCategorys = this.categories.map(category => category.id);
+      else this.selectedCategorys = [];
+    },
+    deleteManyCategory: function () {
+      emitEvent('selectManyContent', this.categories);
+    },
+
     selectCategory: function(category) {
       this.selectedCategory = category;
       emitEvent('eventSelectCategory', this.selectedCategory);
