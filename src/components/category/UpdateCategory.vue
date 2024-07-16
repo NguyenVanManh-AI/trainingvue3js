@@ -16,8 +16,23 @@
                         <input v-model="category.title" type="text" class="mb-1 form-control" placeholder="Title">
                         <textarea v-model="category.description" class="mb-1 form-control" placeholder="Description" rows="3"></textarea>
                         <input v-model="category.search_number" type="number" min="0" value="0" class="mb-1 form-control" placeholder="Search Number">                    
-                        <input @change="handleFileUpload" type="file" accept="image/*" class="mb-1 form-control-file" placeholder="Upload Image">     
-                        <img :src="config.URL + category.thumbnail" alt="">          
+                        <div class="containerPreview">
+                            <div class="innerPreview">
+                                <div :class="{'minPreview':true, 'havePreview':previewImageSrc != null,'noPreview':previewImageSrc == null}">
+                                    <input class="inputFilePreview" type="file" @change="previewImage"
+                                        accept="image/*" ref="fileInput" />
+                                    <span class="iconCloundPreview" v-if="previewImageSrc == null"><i
+                                            class="fa-solid fa-cloud-arrow-up"></i></span>
+                                    <div v-if="previewImageSrc" class="boxPreview">
+                                        <img class="preview" :src="previewImageSrc" alt="Preview" />
+                                        <img src="@/assets/error.png" @click="removeFile" class="closePreview"
+                                            alt="Remove">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <input @change="handleFileUpload" type="file" accept="image/*" class="mb-1 form-control-file" placeholder="Upload Image">      -->
+                        <!-- <img :src="config.URL + category.thumbnail" alt="">           -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -49,6 +64,7 @@ export default {
                 thumbnail: null,
             },
             isChange:false,
+            previewImageSrc: null,
         }
     },
     props: {
@@ -59,15 +75,33 @@ export default {
         onEvent('eventSelectCategory', (selectedCategory) => {
             // this.category = selectedCategory; // truyền tham chiếu 
             this.category = Object.assign({}, selectedCategory); // truyền value 
+            this.previewImageSrc = this.config.URL + this.category.thumbnail;
             // console.log(this.category);
         });
     },
 
     methods: {
-        handleFileUpload(event) {
-            this.category.thumbnail = event.target.files[0];
-            this.isChange = true;
+        previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.previewImageSrc = e.target.result;
+                    this.category.thumbnail = file;
+                    this.isChange = true;
+                };
+                reader.readAsDataURL(file);
+            } else this.removeFile();
         },
+        removeFile: function () {
+            this.previewImageSrc = null;
+            this.category.thumbnail = null;
+            this.$refs.fileInput.value = '';
+            this.isChange = false;
+        },
+        // handleFileUpload(event) {
+        //     this.category.thumbnail = event.target.files[0];
+        // },
         updateCategory: async function() {
             try {
                 // console.log(this.category.tag);
@@ -76,8 +110,8 @@ export default {
                 formData.append('title', this.category.title);
                 formData.append('description', this.category.description);
                 formData.append('search_number', this.category.search_number);
-                this.category.tag = JSON.stringify(this.category.tag);
-                formData.append('tag', this.category.tag);
+                var tagString = JSON.stringify(this.category.tag);
+                formData.append('tag', tagString);
                 if(this.isChange) formData.append('thumbnail', this.category.thumbnail);
 
                 const { data, messages } = await UserRequest.post(`category/update/${this.category.id}`, formData, true);
@@ -87,7 +121,6 @@ export default {
                 this.$refs.updateCategoryRef.click(); // C1
                 // var closePW = window.document.getElementById('updateCategory');
                 // closePW.click();
-                this.resetData();
                 emitEvent('eventSuccess', messages[0]);
 
                 emitEvent('eventRegetCategories', '');
@@ -95,16 +128,6 @@ export default {
             catch (error) {
                 if (error.data) emitEvent('eventError', error.data[0]);
                 if (error.messages) emitEvent('eventError', error.messages[0]);
-            }
-        },
-        resetData: function () {
-            this.$refs.fileInput.value = '';
-            this.category = {
-                title: '',
-                description: "",
-                search_number: 0,
-                tag: ["tag1","tag2","tag3",999,{"age":29,"name":"Nguyễn Văn Mạnh"}],
-                thumbnail: null,
             }
         },
     },
@@ -137,4 +160,86 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+
+/* css for preview image */
+.containerPreview {
+    /* display: flex; */
+    align-items: center;
+    align-content: center;
+    height: 100%;
+}
+.innerPreview {
+    display: flex;
+    justify-content: center;
+}
+.minPreview {
+    background-color: #e9ecef;
+    position: relative;
+    text-align: center;
+    /* width: 170px; */
+    /* width: 100%; */
+    /* height: 170px; */
+    max-height: 200px;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s ease;
+}
+.noPreview {
+    width: 100%;
+}
+.havePreview {
+    /* width: fit-content; */
+    width: 100%;
+}
+.minPreview .preview {
+    /* width: 150px; */
+    width: 100%;
+    /* height: 150px; */
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: default;
+}
+
+.minPreview:hover {
+    transition: all 0.5s ease;
+    background: #E8F5E9;
+}
+
+.inputFilePreview {
+    opacity: 0;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    cursor: pointer;
+    /* width: 150px; */
+    width: 100%;
+    height: 100%;
+    /* height: 150px; */
+}
+
+.boxPreview {
+    position: relative;
+}
+
+.iconCloundPreview {
+    cursor: pointer;
+    font-size: 60px;
+    color: var(--user-color);
+}
+
+.closePreview {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 16px;
+}
+
+/* css for preview image */
+
+</style>
