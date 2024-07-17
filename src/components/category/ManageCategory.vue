@@ -163,6 +163,7 @@ export default {
   },
 
   mounted() {
+    emitEvent('eventTitleHeader', 'Category Manage');
     const queryString = window.location.search;
     const searchParams = new URLSearchParams(queryString);
     this.search = searchParams.get('search') || '';
