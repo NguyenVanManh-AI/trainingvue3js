@@ -72,7 +72,6 @@
             <th class="table-cell" scope="row"><input :checked="isSelected(category.id)" type="checkbox" class=""
                 @change="handleSelect(category.id)"></th>
             <th scope="row">{{ category.id }}</th>
-            <td>{{ category.title }}</td>
             <td>{{ category.description }}</td>
             <td>{{ category.search_number }}</td>
             <td>{{ JSON.stringify(category.tag) }}</td>
@@ -80,6 +79,8 @@
             <td>{{ helper.formatDate(category.created_at) }}</td>
             <td>{{ helper.formatDate(category.updated_at) }}</td>
             <td style="display: flex;">
+              <button content="Detail Category" v-tippy @click="selectCategory(category)" data-toggle="modal"
+                data-target="#detailCategory" type="button" class="btn btn-outline-success mr-2"><i class="fa-solid fa-eye"></i></button>
               <button content="Update Category" v-tippy @click="selectCategory(category)" data-toggle="modal"
                 data-target="#updateCategory" type="button" class="btn btn-outline-primary mr-2"><i
                   class="fa-solid fa-pen-nib"></i></button>
@@ -100,6 +101,7 @@
 
     <AddCategory></AddCategory>
     <UpdateCategory :config="config"></UpdateCategory>
+    <DetailCategory :config="config"></DetailCategory>
     <DeleteCategory :config="config"></DeleteCategory>
     <DeleteManyCategory :selectedCategorys="selectedCategorys"></DeleteManyCategory>
   </div>
@@ -117,6 +119,7 @@ import _ from 'lodash';
 import helper from '@/helper'
 import AddCategory from '@/components/category/AddCategory'
 import UpdateCategory from '@/components/category/UpdateCategory'
+import DetailCategory from '@/components/category/DetailCategory'
 import DeleteCategory from '@/components/category/DeleteCategory'
 import DeleteManyCategory from '@/components/category/DeleteManyCategory'
 import Paginate from 'vuejs-paginate-next';
@@ -152,6 +155,7 @@ export default {
     UpdateCategory,
     DeleteCategory,
     DeleteManyCategory,
+    DetailCategory,
   },
   props: {
 
