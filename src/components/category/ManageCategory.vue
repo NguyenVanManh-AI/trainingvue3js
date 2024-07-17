@@ -72,6 +72,7 @@
             <th class="table-cell" scope="row"><input :checked="isSelected(category.id)" type="checkbox" class=""
                 @change="handleSelect(category.id)"></th>
             <th scope="row">{{ category.id }}</th>
+            <td><li><router-link :to="{ name: 'DetailPageCategory', params: { id_category: category.id } }">{{ category.title }}</router-link></li></td>
             <td>{{ category.description }}</td>
             <td>{{ category.search_number }}</td>
             <td>{{ JSON.stringify(category.tag) }}</td>
